@@ -113,10 +113,18 @@ app.post('/places',(req,res)=>{
         if(err) throw err;
         const placeDoc=await place.create({
             owner:user.id,
-            title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest
+            title,address,photos:addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest
         });
         res.json(placeDoc)
     });
-})
+});
+
+app.get('/places',(req,res)=>{
+    const {token}=req.cookies;
+    jwt.verify(token , jwtSecret , {} , async(err,user)=>{
+    const {id}=user;
+    res.json( await place.find({owner:id}))
+    });
+});
 
 app.listen(4000);

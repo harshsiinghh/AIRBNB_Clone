@@ -23,6 +23,7 @@ function App() {
       <Route path="/account" element={<Account/>}/>
       <Route path="/account/places" element={<PlacesPage/>}/>
       <Route path="/account/places/new" element={<PlacesFormPage/>}/>
+      <Route path="/account/places/:id" element={<PlacesFormPage/>}/>
       </Route>
     </Routes>
   </UserContextProvider>
@@ -30,3 +31,5 @@ function App() {
 }
 
 export default App
+
+//4:06:52
