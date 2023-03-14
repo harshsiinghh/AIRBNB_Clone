@@ -6,7 +6,7 @@ import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function PlacesFormPage(){
-    const id=useParams();
+    const {id}=useParams();
     const[title,setTitle]=useState('');
     const[address,setAddress]=useState('');
     const[addedPhotos,setAddedPhotos]=useState([]);
@@ -18,17 +18,39 @@ export default function PlacesFormPage(){
     const[maxGuest,setMaxGuest]=useState(1);
     const[redirect,setRedirect]=useState(false);
 
-    // useEffect(()=>{
-    //     if(!id){
-    // return;
-    //     }
-    // axios.get("/places/"+id);
-    // },[id]);
+    useEffect(()=>{
+        if(!id){
+    return;
+        }
+    axios.get("/places/"+id)
+    .then(response=>{
+const{data}=response;
+setTitle(data.title);
+setAddress(data.address);
+setAddedPhotos(data.photos);
+setDescription(data.description);
+setPerks(data.perks);
+setExtraInfo(data.extraInfo);
+setCheckIn(data.checkIn);
+setcheckOut(data.checkOut);
+setMaxGuest(data.maxGuest);
+    });
+    },[id]);
 
-    async function addNewPlace(ev){
-        ev.preventDefault();
-        await axios.post('/places',{title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest});
-        setRedirect(true);
+    async function savePlace(ev){
+        const placeData={title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest};
+        if(id){
+            //update
+            ev.preventDefault();
+            await axios.put('/places',{id,...placeData});
+            setRedirect(true);
+        }else{
+            //new
+            ev.preventDefault();
+            await axios.post('/places',placeData);
+            setRedirect(true);
+        }
+
     }
 
     if(redirect){
@@ -38,18 +60,18 @@ export default function PlacesFormPage(){
     return(
         <div>
             <AccountNav/>
-        <form onSubmit={addNewPlace}>
+        <form onSubmit={savePlace}>
             <h2 className="text-2xl mt-4">My Place</h2>
-            <input placeholder="Title" value={title} onChange={ev=>setTitle(ev.target.value)}/>
+            <input type="text" placeholder="Title" value={title} onChange={ev=>setTitle(ev.target.value)}/>
             <h2 className="text-2xl mt-4">My Address</h2>
-            <input placeholder="Address" value={address} onChange={ev=>setAddress(ev.target.value)}/>
+            <input type="text" placeholder="Address" value={address} onChange={ev=>setAddress(ev.target.value)}/>
             <h2 className="text-2xl mt-4">Photos</h2>
             <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos}/>
             <h2 className="text-2xl mt-4">Description</h2>
-            <input placeholder="Describe My Place" />
+            <input type="text" placeholder="Describe My Place" />
             <textarea value={description} onChange={ev=>setDescription(ev.target.value)}/>
             <h2 className="text-2xl mt-4">Perks</h2>
-            <input placeholder="Describe Your Facilities" />
+            <input type="text" placeholder="Describe Your Facilities" />
             <PerksLabel selected={perks} onChange={setPerks}/>
             <h2 className="text-2xl mt-4">Extra Information</h2>
             <input placeholder="Provide any existing extra info" />

@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type="text"],input[type="email"],input[type="password"],input[type="number"],input,textarea{
+input[type="text"],input[type="email"],input[type="password"],input[type="number"],textarea{
 @apply w-full border my-1 py-3 px-3 rounded-2xl my-2 ;
+}
+textarea{
+    height: 150px;
 }
 
 button{
