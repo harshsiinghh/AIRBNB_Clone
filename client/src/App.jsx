@@ -5,6 +5,7 @@ import Layout from './Layout'
 import Account from './pages/Account'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
+import PlacePage from './pages/PlacePage'
 import PlacesFormPage from './pages/PlacesFormPage'
 import PlacesPage from './pages/PlacesPage'
 import RegisterPage from './pages/RegisterPage'
@@ -24,6 +25,7 @@ function App() {
       <Route path="/account/places" element={<PlacesPage/>}/>
       <Route path="/account/places/new" element={<PlacesFormPage/>}/>
       <Route path="/account/places/:id" element={<PlacesFormPage/>}/>
+      <Route path="/place/:id" element={<PlacePage/>}/>
       </Route>
     </Routes>
   </UserContextProvider>
@@ -32,4 +34,4 @@ function App() {
 
 export default App
 
-//4:06:52
+//5:26:15 

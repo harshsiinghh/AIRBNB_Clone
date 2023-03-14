@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export default function PlacesPage(){
 const[places,setPlaces]=useState([]);
 useEffect(() => {
-    axios.get("/places").then(({data})=>{
+    axios.get("/user-places").then(({data})=>{
 setPlaces(data);
     });
 },[]);
@@ -24,9 +24,9 @@ setPlaces(data);
     Add New Places 
     </Link>
 </div>
-<div className="mt-4">
+<div className="mt-4 ">
     {places.length > 0 && places.map(place=>(
-        <Link to={'/account/places/'+place._id}className="flex gap-4 cursor-pointer bg-gray-200 rounded-2xl p-5">
+        <Link to={'/account/places/'+place._id}className="flex gap-4 cursor-pointer bg-gray-200 rounded-2xl p-5 mt-4">
             <div className="flex w-32 h-32 bg-gray-300 grow shrink-0">
                 <img className="object-cover" src={'http://localhost:4000/Uploads/'+place.photos[0]} alt="" />
             </div>

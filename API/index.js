@@ -108,18 +108,18 @@ res.json(uploadedFiles);
 
 app.post('/places',(req,res)=>{
     const {token}=req.cookies;
-    const {title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest}=req.body;
+    const {title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest,price}=req.body;
     jwt.verify(token , jwtSecret , {} , async (err,user)=>{
         if(err) throw err;
         const placeDoc=await place.create({
             owner:user.id,
-            title,address,photos:addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest
+            title,address,photos:addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest,price
         });
         res.json(placeDoc)
     });
 });
 
-app.get('/places',(req,res)=>{
+app.get('/user-places',(req,res)=>{
     const {token}=req.cookies;
     jwt.verify(token , jwtSecret , {} , async(err,user)=>{
     const {id}=user;
@@ -134,19 +134,24 @@ res.json(await place.findById(id));
 
 app.put('/places', async (req,res)=>{
     const {token}=req.cookies;
-    const {id,title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest}=req.body;
+    const {id,title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest,price}=req.body;
     jwt.verify(token , jwtSecret , {} , async(err,user)=>{
         if(err) throw err;
         const placeDoc= await place.findById(id);
         if(user.id===placeDoc.owner.toString()){
             placeDoc.set({
-                title,address,photos:addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest
+                title,address,photos:addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest,price
             });
             placeDoc.save();
             res.json("ok");
         }
 
     });
+});
+
+
+app.get('/places', async (req,res)=>{
+res.json(await place.find());
 });
 
 app.listen(4000);

@@ -16,6 +16,7 @@ export default function PlacesFormPage(){
     const[checkIn,setCheckIn]=useState('');
     const[checkOut,setcheckOut]=useState('');
     const[maxGuest,setMaxGuest]=useState(1);
+    const[price,setPrice]=useState(100);
     const[redirect,setRedirect]=useState(false);
 
     useEffect(()=>{
@@ -34,11 +35,12 @@ setExtraInfo(data.extraInfo);
 setCheckIn(data.checkIn);
 setcheckOut(data.checkOut);
 setMaxGuest(data.maxGuest);
+setPrice(data.price)
     });
     },[id]);
 
     async function savePlace(ev){
-        const placeData={title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest};
+        const placeData={title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,maxGuest,price};
         if(id){
             //update
             ev.preventDefault();
@@ -77,7 +79,7 @@ setMaxGuest(data.maxGuest);
             <input placeholder="Provide any existing extra info" />
             <textarea value={extraInfo} onChange={ev=>setExtraInfo(ev.target.value)}/>
             <h2 className="text-2xl mt-4 gap-2">Check-In Time & Check-Out Time </h2>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 md:grid-cols-4">
                 <div>
                 <h3 className="mt-2 -mb-2">Check-In Time</h3>
                 <input type="text" placeholder="12:00PM" value={checkIn} onChange={ev=>setCheckIn(ev.target.value)} />
@@ -89,6 +91,10 @@ setMaxGuest(data.maxGuest);
                 <div>
                 <h3 className="mt-2 -mb-2">Max Guests Allowed</h3>
                 <input type="number" placeholder="2" value={maxGuest} onChange={ev=>setMaxGuest(ev.target.value)}/>
+                </div>
+                <div>
+                <h3 className="mt-2 -mb-2">Price Per Night</h3>
+                <input type="number" placeholder="$$$" value={price} onChange={ev=>setPrice(ev.target.value)}/>
                 </div>
             </div>
             <div>
