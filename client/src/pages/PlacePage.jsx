@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BookingWidget from "../BookingWidget";
 
 export default function PlacePage(){
     const {id}=useParams();
@@ -18,11 +19,22 @@ export default function PlacePage(){
     if(!place) return '';
     if(showAll){
         return(
-            <div className="absolute inset-0 bg-white min-h-screen">
-                <div className="p-6 grid gap-6 items-center">
+            <div className="absolute inset-0 bg-black min-h">
+                <div className=" bg-black p-6 grid gap-6">
+                    <div>
+                        <h2 className="text-3xl text-white mb-6">Photos of {place.title}</h2>
+                        <h2 className="text-xl text-white mb-6">{place.address}</h2>
+
+                        <button onClick={()=>setShowAll(false)} className="bg-white font-semibold flex gap-2 fixed py-2 px-4 right-12 top-8 shaodow shadow-black-500 rounded-2xl ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                            Close Photo
+                        </button>
+                    </div>
                 {place?.photos?.length >0 && place.photos.map(photo=>(
                         <div>
-                            <img src={'http://localhost:4000/Uploads/'+photo} alt="" />
+                            <img className="rounded-2xl" src={'http://localhost:4000/Uploads/'+photo} alt="" />
                         </div>
                     ))};
                 </div>
@@ -32,35 +44,41 @@ export default function PlacePage(){
     return (
         <div className="mt-4 -mx-8 px-8 py-10 my-8 bg-gray-100">
             <h1 className="text-2xl">{place.title}</h1>
-            <a target="_blank" className="my-2 block font-semibold underline" href={"https://maps.google.com/?q="+place.address}>{place.address}</a>
+            <a target="_blank" className="flex gap-1 my-2 block font-semibold underline" href={"https://maps.google.com/?q="+place.address}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            </svg>
+                {place.address}
+                </a>
             <div className="relative">
-            <div className="mt-8 grid gap-2 lg:grid-cols-[2fr_1fr_1fr] md:grid-cols-[2fr_1fr]"> 
+            <div className="mt-8 grid gap-2 lg:grid-cols-[2fr_1fr_1fr] md:grid-cols-[2fr_1fr] rounded-2xl overflow-hidden"> 
             <div>
                 {place.photos?.[0] && (
                     <div>
-                        <img className="aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[0]} alt="" />
+                        <img  onClick={()=>setShowAll(true)}  className="cursor-pointer aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[0]} alt="" />
                     </div>
 
                 )}
             </div>
             <div className="grid">
                 {place.photos?.[1] && (
-                    <img className="aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[1]} alt="" />
+                    <img onClick={()=>setShowAll(true)}  className="cursor-pointer aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[1]} alt="" />
                 )}
                 <div className="overflow-hidden">
                 {place.photos?.[2] && (
-                    <img className="aspect-square object-cover relative top-2" src={'http://localhost:4000/Uploads/'+ place.photos[2]} alt="" />
+                    <img  onClick={()=>setShowAll(true)} className="cursor-pointer aspect-square object-cover relative top-2" src={'http://localhost:4000/Uploads/'+ place.photos[2]} alt="" />
                 )}
 
                 </div>
             </div>
             <div className="grid lg:visible md:invisible">
                 {place.photos?.[3] && (
-                    <img className="aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[3]} alt="" />
+                    <img onClick={()=>setShowAll(true)}  className="cursor-pointer aspect-square object-cover" src={'http://localhost:4000/Uploads/'+ place.photos[3]} alt="" />
                 )}
                 <div className="overflow-hidden">
                 {place.photos?.[4] && (
-                    <img className="aspect-square object-cover relative top-2" src={'http://localhost:4000/Uploads/'+ place.photos[4]} alt="" />
+                    <img onClick={()=>setShowAll(true)}  className="cursor-pointer aspect-square object-cover relative top-2" src={'http://localhost:4000/Uploads/'+ place.photos[4]} alt="" />
                 )}
 
                 </div>
@@ -75,6 +93,32 @@ export default function PlacePage(){
             </svg>
             Show More Photos</button>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 mt-10 mb-6">
+                <div className="text-lg">
+                <div>
+                <h2 className="font-semibold text-2xl mt-4 mb-4">Description</h2>
+                {place.description}
+                </div>
+                <div className="mt-4 font-semibold " >
+                    Check-In: {place.checkIn} <br />
+                    Check-Out: {place.checkOut}<br />
+                    maxGuest: {place.maxGuest}
+                </div>
+                </div>
+                <div>
+                    <BookingWidget place={place}/>
+                </div>
+
+            </div>
+            <div className="bg-white border-t">
+            <div>
+            <h2 className="font-semibold text-2xl mt-4 mb-4">Extra Information</h2>
+            <div className="text-gray-700 mt-4 text-sm leading-6">
+                {place.extraInfo}
+            </div>
+            </div>
+            </div>
+            
 
         </div>
     )
