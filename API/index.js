@@ -7,6 +7,7 @@ const User= require('./models/user.js')
 const cookieParser= require("cookie-parser");
 const jwt=require("jsonwebtoken");
 const place=require('./models/place.js');
+const booking=require('./models/booking.js');
 const imageDownloader=require("image-downloader");
 const multer= require('multer');
 const fs=require('fs');
@@ -22,6 +23,15 @@ app.use(cors({
 }));
 
 mongoose.connect(process.env.MONGO_URL);
+
+function getDataFromToken(req){
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token , jwtSecret , {} , async(err,user)=>{
+            if(err) throw err;
+            resolve(user);
+        });
+    });
+};
 
 app.get('/test',(req,res)=>{
 res.json('test ok');
@@ -153,5 +163,33 @@ app.put('/places', async (req,res)=>{
 app.get('/places', async (req,res)=>{
 res.json(await place.find());
 });
+
+app.post('/bookings', async (req,res)=>{
+    const user=await getDataFromToken(req);
+    const {place,checkIn,checkOut,maxGuest,name,mobile,price}=req.body;
+    booking.create({
+        place,checkIn,checkOut,maxGuest,name,mobile,price,user:user.id
+    }).then((doc)=>{
+        res.json(doc);
+    }).catch((err)=>{
+throw err;
+    });
+});
+
+function getDataFromToken(req){
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token , jwtSecret , {} , async(err,user)=>{
+            if(err) throw err;
+            resolve(user);
+        });
+    });
+};
+
+app.get('/bookings', async (req,res )=>{
+   const user=await getDataFromToken(req);
+   res.json( await booking.find({user:user.id}).populate('place'))
+})
+
+
 
 app.listen(4000);
